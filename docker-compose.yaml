@@ -1,0 +1,99 @@
+version: '3.4'
+services:
+  redis-master0:
+    container_name: redis-master0
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9001
+    restart: always
+    volumes:
+      - ./redis-shard/redis-master0:/data
+    networks:
+      - redis-net
+    ports:
+      - 9001:9001
+
+  redis-master1:
+    container_name: redis-master1
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9002
+    restart: always
+    volumes:
+      - ./redis-shard/redis-master1:/data
+    networks:
+      - redis-net
+    ports:
+      - 9002:9002
+
+  redis-master2:
+    container_name: redis-master2
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9003
+    restart: always
+    volumes:
+      - ./redis-shard/redis-master2:/data
+    networks:
+      - redis-net
+    ports:
+      - 9003:9003
+
+  redis-slave0:
+    container_name: redis-slave0
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9004
+    restart: always
+    volumes:
+      - ./redis-shard/redis-slave0:/data
+    networks:
+      - redis-net
+
+  redis-slave1:
+    container_name: redis-slave1
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9005
+    restart: always
+    volumes:
+      - ./redis-shard/redis-slave1:/data
+    networks:
+      - redis-net
+
+  redis-slave2:
+    container_name: redis-slave2
+    build:
+      context: redis
+      args:
+        - REDIS_PORT=9006
+    restart: always
+    volumes:
+      - ./redis-shard/redis-slave2:/data
+    networks:
+      - redis-net
+
+  cluster-creator:
+      image: redis
+      container_name: redis-cluster-creator
+      entrypoint: redis-cli --cluster create redis-master0:9001 redis-master1:9002 redis-master2:9003 redis-slave0:9004 redis-slave1:9005 redis-slave2:9006 --cluster-replicas 1 --cluster-yes
+      networks:
+        - redis-net
+      depends_on: 
+        - redis-master0
+        - redis-master1
+        - redis-master2
+        - redis-slave0
+        - redis-slave1
+        - redis-slave2
+
+networks:
+  redis-net:
+    name: redis-cluster-network
+
+
