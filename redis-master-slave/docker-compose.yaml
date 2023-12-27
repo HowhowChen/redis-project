@@ -1,0 +1,45 @@
+version: '3.4'
+services:
+  redis-master0:
+    image: redis
+    container_name: redis-master0
+    restart: always
+    volumes:
+      - ./redis-shard/redis-master0:/data
+    ports:
+      - 6379:6379
+    networks:
+      - redis-net
+
+  redis-slave0:
+    image: redis
+    container_name: redis-slave0
+    restart: always
+    volumes:
+      - ./redis-shard/redis-slave0:/data
+    ports: 
+      - 9001:9001
+    networks:
+      - redis-net
+    command: redis-server --port 9001 --slaveof redis-master0 6379
+    depends_on: 
+      - redis-master0
+
+  redis-slave1:
+    image: redis
+    container_name: redis-slave1
+    restart: always
+    volumes:
+      - ./redis-shard/redis-slave1:/data
+    ports: 
+      - 9002:9002
+    networks:
+      - redis-net
+    command: redis-server --port 9002 --slaveof redis-master0 6379
+    depends_on: 
+      - redis-master0
+      - redis-slave0
+
+networks:
+  redis-net:
+    name: redis-scaling-network

@@ -1,1 +1,3 @@
-/redis-shard
+/redis-master-slave/redis-shard
+/redis-sentinel/redis-shard
+/redis-cluster/redis-shard

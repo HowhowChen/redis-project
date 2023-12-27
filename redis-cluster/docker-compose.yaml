@@ -94,6 +94,6 @@ services:
 
 networks:
   redis-net:
-    name: redis-cluster-network
+    name: redis-scaling-network
 
 

@@ -3,7 +3,7 @@ services:
   redis-sentinel0:
     container_name: redis-sentinel0
     build: 
-        context: redis-sentinel
+        context: redis
         args:
           - REDIS_PORT=26379
           - REDIS_MASTER_HOST=172.19.0.4
@@ -18,7 +18,7 @@ services:
   redis-sentinel1:
     container_name: redis-sentinel1
     build: 
-        context: redis-sentinel
+        context: redis
         args:
           - REDIS_PORT=26380
           - REDIS_MASTER_HOST=172.19.0.4
@@ -33,7 +33,7 @@ services:
   redis-sentinel2:
     container_name: redis-sentinel2
     build: 
-        context: redis-sentinel
+        context: redis
         args:
           - REDIS_PORT=26381
           - REDIS_MASTER_HOST=172.19.0.4
@@ -47,4 +47,4 @@ services:
 
 networks:
   redis-net:
-    name: redis-cluster-network
+    name: redis-scaling-network
